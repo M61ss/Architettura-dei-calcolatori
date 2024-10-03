@@ -1,4 +1,22 @@
-# RISC-V ISA
+# RISC-V ISA <!-- omit from toc -->
+
+- [Operandi](#operandi)
+- [Operazioni aritmetiche - somma e sottrazione](#operazioni-aritmetiche---somma-e-sottrazione)
+  - [Operatori immediati o costanti](#operatori-immediati-o-costanti)
+- [Words](#words)
+- [Registri](#registri)
+- [Interazione con la memoria](#interazione-con-la-memoria)
+  - [Spostare dati](#spostare-dati)
+- [Rappresentazione dei numeri](#rappresentazione-dei-numeri)
+  - [Complemento a 2](#complemento-a-2)
+  - [Estensione del segno](#estensione-del-segno)
+- [Rappresentazione delle istruzioni](#rappresentazione-delle-istruzioni)
+  - [Formato di tipo R (register)](#formato-di-tipo-r-register)
+  - [Formato di tipo I (immediate)](#formato-di-tipo-i-immediate)
+  - [Formato di tipo S (store)](#formato-di-tipo-s-store)
+- [All instructions](#all-instructions)
+  - [Math](#math)
+  - [Load](#load)
 
 ## Operandi
 
@@ -105,3 +123,106 @@ sw x5, 40(x6)
 > [!TIP] 
 >
 > Lavorare con la memoria significa eseguire tante operazioni di load/store. Per questo motivo i compilatori cercano di usare i registri il più possibile.
+
+## Rappresentazione dei numeri
+
+In uno spazio di rappresentazione a 32 bit si compongono numeri positivi da 0 a 2^31-1, riservando quindi il bit più significativo alla rappresentazione del segno: i numeri negativi hanno il bit più significativo pari a 1.
+\
+In questo modo si ottiene un range di valori che, più in generale, si estende da -2^(n-1) a 2^(n-1) - 1.
+
+> [!WARNING] 
+>
+> 2^(n-1) non ha il suo corrispondente positivo. La ragione sta nel fatto che nel conteggio dei numeri positivi si include anche lo 0.
+
+### Complemento a 2
+
+Per effettuare correttamente le operazioni aritmetiche è necessario rappresentare i numeri negativi in complemento a 2 (si ricorda che il calcolatore è in grado di fare soltanto le somme).
+
+Per eseguire il complemento a 2 bisogna:
+- Invertire tutti i bit del numero positivo, trasformando gli 1 in 0 e viceversa.
+- Sommare 1 al numero risultante.
+
+### Estensione del segno
+
+Nel caso in cui desideri rappresentare un numero inizialmente codificato a n bit in una codifica con più bit devo replicare il bit di segno a sinistra.
+
+_Esempio_:
+
+In 8 bit:
+
++2 = **0**000 0010
+\
+-2 = **1**111 1110
+
+Diventa in 16 bit:
+
++2 = **0000 0000 0**000 0010
+\
+-2 = **1111 1111 1**111 1110
+
+## Rappresentazione delle istruzioni
+
+Tutte le istruzioni del RISC-V sono codificate come parole a 32 bit aventi uno specifico formato.
+
+### Formato di tipo R (register)
+
+Questo formato viene usato per le istruzioni di registro.
+
+![instruction_sample_r](..\resources\instruction_sample_r.png)
+
+Campi dell'istruzione:
+
+- opcode (operative code): definisce l'operazione base dell'istruzione.
+- rd (destination registry): registro di destinazione del risultato.
+- funz3: codice operativo aggiuntivo a 3 bit.
+- rs1 (source register 1): registro sorgente per il primo operando.
+- rs2 (source register 2).
+- funz7: codice operativo aggiuntivo di 7 bit.
+
+### Formato di tipo I (immediate)
+
+Questo formato viene usato per le operazioni immediate o richiedenti costanti. 
+
+![instruction_sample_i](..\resources\instruction_sample_i.png)
+
+Campi dell'istruzione:
+
+- opcode (operative code): definisce l'operazione base dell'istruzione.
+- rd (destination registry): registro di destinazione del risultato.
+- funct3: codice operativo aggiuntivo a 3 bit.
+- rs1 (source register 1): registro sorgente per il primo operando.
+- immediate: operando costante oppure offset da aggiungere all'indirizzo di base.
+
+### Formato di tipo S (store)
+
+Questo formato viene usato per le operazioni di salvataggio in memoria.
+
+![instruction_sample_s](..\resources\instruction_sample_s.png)
+
+- opcode (operative code): definisce l'operazione base dell'istruzione.
+- funct3: codice operativo aggiuntivo a 3 bit.
+- rs1 (source register 1): registro che contiene l'indirizzo di memoria di base.
+- rs2 (source register 2): registro che contiene l'operando che deve essere salvato in memoria.
+- immediate: operando costante oppure offset da aggiungere all'indirizzo di base, composto dai due blocchi bianchi (7+5 bit).
+
+
+
+
+
+
+
+
+## All instructions
+
+### Math
+
+- `add`: somma.
+- `sub`: sottrazione.
+- `addi`: somma istantanea.
+
+### Load
+
+- `lw`: spostamento di parola.
+- `lh`: spostamento di mezza parola.
+- `lb`: spostamento di byte.
+- `lwu`, `lhu`, `lbu`: analoghi rispettivamente ai 3 precedenti, ma unsigned.
