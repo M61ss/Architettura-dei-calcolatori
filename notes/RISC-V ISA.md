@@ -14,8 +14,10 @@
   - [Formato di tipo R (register)](#formato-di-tipo-r-register)
   - [Formato di tipo I (immediate)](#formato-di-tipo-i-immediate)
   - [Formato di tipo S (store)](#formato-di-tipo-s-store)
+  - [Formato delle operazioni di shift](#formato-delle-operazioni-di-shift)
 - [All instructions](#all-instructions)
   - [Math](#math)
+  - [Logical](#logical)
   - [Load](#load)
 
 ## Operandi
@@ -205,6 +207,23 @@ Questo formato viene usato per le operazioni di salvataggio in memoria.
 - rs2 (source register 2): registro che contiene l'operando che deve essere salvato in memoria.
 - immediate: operando costante oppure offset da aggiungere all'indirizzo di base, composto dai due blocchi bianchi (7+5 bit).
 
+### Formato delle operazioni di shift
+
+Questo formato viene usato per le operazioni di shift dei bit.
+
+![instruction_sample_shift](..\resources\instruction_sample_shift.png)
+
+- opcode (operative code): definisce l'operazione base dell'istruzione.
+- rd (destination registry): registro di destinazione del risultato.
+- funct3: codice operativo aggiuntivo a 3 bit.
+- rs1 (source register 1): registro che contiene l'indirizzo di memoria di base.
+- immed: definisce di quante posizioni deve essere eseguito lo shift.
+- funct6: codice operativo aggiuntivo di 6 bit.
+
+
+
+
+
 
 
 
@@ -219,6 +238,14 @@ Questo formato viene usato per le operazioni di salvataggio in memoria.
 - `add`: somma.
 - `sub`: sottrazione.
 - `addi`: somma istantanea.
+
+### Logical
+
+- `slli`: shift left per `i` bit.
+- `srli`: shift right.
+- `and`, `andi`: and bit a bit.
+- `or`, `ori`: or bit a bit.
+- `xor`, `xori`: xor/not bit a bit.
 
 ### Load
 
